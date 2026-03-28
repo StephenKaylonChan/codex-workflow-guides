@@ -1,0 +1,29 @@
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+personality = "pragmatic"
+project_doc_max_bytes = 32768
+
+[sandbox_workspace_write]
+network_access = false
+
+[history]
+persistence = "save-all"
+max_bytes = 5242880
+
+[tui]
+status_line = ["model", "context-remaining", "git-branch"]
+
+[profiles.deep-review]
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.lightweight]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+

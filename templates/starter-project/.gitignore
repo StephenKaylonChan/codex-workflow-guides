@@ -1,0 +1,9 @@
+AGENTS.override.md
+.agents/session-notes.md
+.env
+.env.*
+node_modules/
+dist/
+build/
+.DS_Store
+

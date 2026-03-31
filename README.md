@@ -1,7 +1,7 @@
 # Codex 参考文档 (Reference Guides)
 
 > **文档性质**: 通用参考文档，可复用于任何项目
-> **版本**: v1.2（自举与维护版，2026-03-28）
+> **版本**: v1.3（工作流对齐版，2026-03-31）
 > **对标**: Claude Code guides v3.14
 
 本目录包含 AI 协作系统的通用配置指南，核心对象仍是 Codex CLI，但结论同时参考了 Codex 官方文档、公开 GitHub 仓库、更新日志与社区公开资料。
@@ -26,9 +26,10 @@
 
 - `AGENTS.md`
 - `.codex/config.toml`
+- `.codex/agents/`
 - `.codex/rules/default.rules`
 - `.agents/skills/` 与 `.agents/session-notes.md`
-- `docs/roadmap/`、`docs/specs/`、`docs/architecture/`、`docs/reports/`
+- `docs/roadmap/`、`docs/specs/`、`docs/architecture/`、`docs/development/`、`docs/reports/`
 
 这意味着后续对本仓库的维护，不再只是“写参考文档”，而是要按这套配置实际运行一遍。
 
@@ -107,7 +108,7 @@
 
 | 文档 | 说明 | 何时用 |
 |------|------|--------|
-| [templates/starter-project](./templates/starter-project/README.md) | 最小可用项目骨架，含基础配置和 6 个基础 Skills 模板 | 想直接复制起步时 |
+| [templates/starter-project](./templates/starter-project/README.md) | 最小可用项目骨架，含基础配置、custom agents 和 10 个默认 Skills 模板 | 想直接复制起步时 |
 
 ### 配置参考文档
 
@@ -115,7 +116,7 @@
 |------|------|----------|
 | [01-AGENTS配置架构指南](./01-AGENTS配置架构指南.md) | AGENTS.md 层级 + config.toml + Profiles + 沙盒 | 第一读 |
 | [02-自动化与命令策略](./02-自动化与命令策略.md) | Hooks + Rules/ExecPolicy + notify + CI/CD 分层防护 | 第二读 |
-| [03-Skills命令配置](./03-Skills命令配置.md) | Skills 系统 + 6 个自定义 Skill + 社区生态 | 第三读 |
+| [03-Skills命令配置](./03-Skills命令配置.md) | Skills 系统 + 10 个默认 Skill + 社区生态 | 第三读 |
 | [04-工作流最佳实践](./04-工作流最佳实践.md) | 开发循环 + Subagents + MCP + 远程环境/长任务 + 反模式 | 随时参考 |
 
 ---
@@ -176,7 +177,11 @@
 | `$catchup` | 清空上下文后快速恢复 | 按需 |
 | `$handoff` | 提交变更 + 生成交接文档 | 中断前 |
 | `$spec` | 讨论成果整理为设计文档 | 需求讨论后 |
+| `$task` | 小任务直接闭环 | 日常高频 |
 | `$done` | 功能完成收尾检查 | 功能完成后 |
+| `$docs` | 文档刷新和契约回写 | 入口变化后 |
+| `$release` | 阶段或版本整理 | 里程碑节点 |
+| `$diagnose` | 工作流和结构性健康诊断 | 大改前 / 定期 |
 | `$audit` | 项目健康检查 | 每周 |
 | `$deep-audit` | 全面深度审计 | Phase 完成后 |
 
@@ -198,6 +203,9 @@ project-root/
 │
 ├── .codex/
 │   ├── config.toml                # 项目级配置（审批、沙盒、MCP）
+│   ├── agents/                    # 项目级自定义 subagents
+│   │   ├── reviewer.toml
+│   │   └── docs-researcher.toml
 │   └── rules/
 │       └── default.rules          # ExecPolicy 命令策略（Starlark）
 │
@@ -208,7 +216,11 @@ project-root/
 │   │   ├── catchup/SKILL.md
 │   │   ├── handoff/SKILL.md
 │   │   ├── spec/SKILL.md
-│   │   └── done/SKILL.md
+│   │   ├── task/SKILL.md
+│   │   ├── done/SKILL.md
+│   │   ├── docs/SKILL.md
+│   │   ├── release/SKILL.md
+│   │   └── diagnose/SKILL.md
 │   ├── session-notes.md           # 交接文档（$handoff 生成）
 │   └── plan.md                    # 实施计划（临时）
 │
@@ -223,6 +235,11 @@ project-root/
     │   ├── README.md
     │   └── phase-N-xxx.md
     ├── specs/                     # 功能设计文档（$spec 生成）
+    ├── development/               # 开发与维护文档（$docs / $release 维护）
+    │   ├── README.md
+    │   ├── getting-started.md
+    │   ├── maintenance.md
+    │   └── changelog.md
     └── reports/                   # 审计报告（$deep-audit 生成）
 ```
 
@@ -245,6 +262,15 @@ project-root/
 
 Codex 不会自动记住你的纠正和偏好。**每次纠正 Codex 的行为后，立即在 AGENTS.md 中添加对应的 Always/Never 约束**。否则下次会话同样的问题会重复出现。
 
+### 仓库层与个人层
+
+默认把这套流程分成两层：
+
+- 仓库层：`AGENTS.md`、`.codex/`、`.agents/`、`docs/`，保证团队共享和可提交
+- 个人层：`~/.codex/AGENTS.md`、`~/.codex/skills/`、`~/.codex/rules/`、`notify`，承载个人偏好和跨项目复用
+
+如果某个流程是团队必须依赖的，就必须落在仓库层，不能只放在个人配置里。
+
 ### Hooks 现状
 
 Hooks 已经进入 Codex 官方文档，不应再按“未发布能力”来设计 guides。更准确的判断是：
@@ -252,12 +278,13 @@ Hooks 已经进入 Codex 官方文档，不应再按“未发布能力”来设�
 - Codex 现在有 Hooks，但覆盖面和生态成熟度仍弱于 Claude Code
 - 应优先把 Hooks 视为和 Rules / ExecPolicy / CI/CD 并列的一层自动化原语
 - 某些 Claude 式能力仍没有直接等价，例如 Auto Memory 和更强的前置上下文注入
+- 因此本仓库在 `v1.3` 里补齐了 task/docs/release/diagnose/custom agents 等默认流程，但仍然**不把 Hooks 设为 starter 默认层**
 
 ### 信息源
 
-所有内容基于 2026-03-28 前后的官方文档、Codex 更新日志、GitHub 开源仓库与公开社区资料复核，详见 [对比研究文档](./research/00-对比研究-Claude-Code-vs-Codex-CLI.md)。
+所有内容基于 2026-03-31 前后的官方文档、Codex 更新日志、GitHub 开源仓库与公开社区资料复核，详见 [对比研究文档](./research/00-对比研究-Claude-Code-vs-Codex-CLI.md)。
 
 ---
 
 **文档性质**: 通用参考模板（可跨项目复用）
-**最后更新**: 2026-03-28（v1.2）
+**最后更新**: 2026-03-31（v1.3）

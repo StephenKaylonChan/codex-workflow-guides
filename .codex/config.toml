@@ -12,6 +12,10 @@ network_access = false
 persistence = "save-all"
 max_bytes = 5242880
 
+[agents]
+max_threads = 6
+max_depth = 1
+
 [tui]
 status_line = ["model", "context-remaining", "git-branch"]
 

@@ -1,6 +1,6 @@
 # 会话交接记录
 
-最后更新：2026-03-28
+最后更新：2026-03-31
 项目：guides-codex
 
 ## 已完成
@@ -43,11 +43,24 @@
   - 活跃维护层文档已改为中文描述
   - starter 目录下的核心说明文档已改为中文
   - roadmap、spec、report、release 说明层文档已大面积中文化
+- 已完成一轮非 Hooks 默认流程对齐：
+  - 新增 `task`、`docs`、`release`、`diagnose` 四个默认 Skills
+  - 新增 `.codex/agents/` 下的 reviewer / docs_researcher 预设
+  - 新增 `docs/development/` 骨架并同步到 starter
+  - 更新初始化 prompt、README、`00-04` 和 starter 入口
+  - 完成 `v1.3` 版本整理
+- 已补一轮 `v1.3` 收口审计：
+  - 明确个人层继续使用 `~/.codex/AGENTS.md`、`~/.codex/skills/`、`~/.codex/rules/`
+  - 修正 Skills 文档里对用户级安装路径的表述
+  - 给 starter 补齐 `docs-maintenance` profile
+  - 把 `codex execpolicy check` 明确加入 starter 与初始化流程的规则自检入口
+  - 把 Phase 3 文档里关于 `release` Skill 的旧判断标为历史结论
 
 ## 进行中
 
 - 当前处于 Phase 4：能力观察与选择性采用。
-- 目前没有正在执行的 Phase 4 子切片。
+- `workflow-parity-alignment` 已完成本轮实现与收口审计。
+- 当前没有新的实施切片正在执行；下一步重新回到 Phase 4 的能力观察。
 
 ## 关键决策
 
@@ -58,7 +71,8 @@
 - 当前默认策略：
   - Hooks 有官方文档，但仍属实验性，不进入 starter 默认层
   - starter 暂不拆多模板
-  - release 纪律保留轻量，不引入专门 release Skill
+  - release 纪律保留轻量，但默认提供 `release` Skill 作为整理入口
+  - 默认支持“仓库层 + 个人层”双层复用，但团队必需流程必须落在仓库内
 
 ## 最近涉及的文件
 
@@ -74,6 +88,8 @@
 - `docs/release/README.md`
 - `templates/starter-project/README.md`
 - `templates/starter-project/AGENTS.md`
+- `templates/starter-project/.codex/agents/`
+- `templates/starter-project/docs/development/`
 - `prompt-新项目初始化.md`
 - `templates/starter-project/docs/roadmap/README.md`
 - `templates/starter-project/docs/roadmap/phase-1-foundation.md`
@@ -91,8 +107,9 @@
 然后从 Phase 4 里选一个切片继续：
 
 1. 当官方成熟度变化时，重新判断 Hooks 默认策略
-2. 继续观察 release 整理频率，确认是否真的需要专门 Skill
-3. 收集更多真实项目接入样本，再决定是否拆分 starter
+2. 收集更多真实项目接入样本，再决定是否拆分 starter
+3. 观察 `task / docs / release / diagnose` 这组默认入口是否需要继续收紧契约
+4. 继续观察 CLI 之外的 Codex app / automations / GitHub Action 是否值得进入默认推荐层
 
 如果下一次仍然要继续做中文化，只需处理“说明性英文术语”残留，不要碰配置键、命令、路径、文件名和正式功能名。
 
@@ -100,4 +117,4 @@
 
 - 基础 Skills 和 starter 虽然已经更稳定，但仍需要更多真实使用样本来验证契约是否足够稳。
 - 当前 Rules 偏保守，后续可能要按真实维护节奏继续微调。
-- 当前目录不是 git 仓库，所以这里无法直接使用 `git status`、`git diff`、commit、push 这类 git 流程。
+- Hooks 以及其他仍在演进中的 Codex 能力，未来仍可能触发默认策略再调整。

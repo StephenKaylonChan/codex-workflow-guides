@@ -2,7 +2,7 @@
 
 > Agent Skills — Codex CLI 的可扩展工作流命令系统
 
-**版本**: v1.2（自举与维护版）
+**版本**: v1.3（工作流对齐版）
 **适用**: Codex CLI v0.115.0 附近（2026-03）
 **对标**: Claude Code guides v3.14《03-Skills命令配置》
 
@@ -104,8 +104,7 @@ Step 3: 仓库根
   $REPO_ROOT/.agents/skills/
 
 Step 4: 用户级
-  ~/.agents/skills/            ← 个人跨项目 Skills
-  ~/.codex/skills/             ← $skill-installer 安装位置
+  ~/.codex/skills/             ← 个人跨项目 Skills / $skill-installer 安装位置
 
 Step 5: 系统级
   /etc/codex/skills/           ← 管理员共享 Skills
@@ -380,7 +379,7 @@ $skill-installer install https://github.com/openai/skills/tree/main/skills/.cura
 # 安装后重启 Codex 以加载新 Skill
 ```
 
-安装位置：`~/.codex/skills/`（用户级，所有项目可用）
+安装位置：`$CODEX_HOME/skills/`（默认是 `~/.codex/skills/`，用户级，所有项目可用）
 
 ### 6.4 内置斜杠命令（非 Skills）
 
@@ -401,7 +400,6 @@ $skill-installer install https://github.com/openai/skills/tree/main/skills/.cura
 | `/resume` | 恢复保存的对话 |
 | `/init` | 生成 AGENTS.md |
 | `/mcp` | MCP 管理 |
-| `/experimental` | 切换实验功能 |
 | `/agent` | 切换代理线程 |
 | `/mention` | 附加文件 |
 | `/statusline` | 自定义状态栏 |
@@ -480,7 +478,17 @@ $skill-installer install https://github.com/openai/skills/tree/main/skills/.cura
 # 手动 clone 或复制到 .agents/skills/
 ```
 
-> **注意**：`$skill-installer` 默认安装到 `~/.codex/skills/`（用户级）。如果想让 Skill 只对当前项目可用，手动复制到 `.agents/skills/`。
+> **注意**：`$skill-installer` 默认安装到 `$CODEX_HOME/skills/`（默认是 `~/.codex/skills/`，用户级）。如果想让 Skill 只对当前项目可用，手动复制到 `.agents/skills/`。
+
+### 7.5 推荐分层
+
+默认按下面三层使用 Skills：
+
+- `.agents/skills/`：项目级。团队共享、需要进入 Git、和项目状态强绑定的工作流。
+- `~/.codex/skills/`：个人级。跨项目复用、只代表个人习惯或个人工具接入的 Skill。
+- Plugin：分发层。想把一组 Skills 或应用能力稳定分享给更多开发者时，再打包成插件。
+
+不要把团队必需流程只放在个人级 Skill 里。否则换机器、换人或在 CI/远程环境中都容易失效。
 
 ---
 
@@ -1360,31 +1368,33 @@ $skill-installer doc
 
 ## 11. 当前仓库的 Skill 取舍说明
 
-对 `guides-codex` 这个仓库本身，当前默认只保留基础六件套：
+对 `guides-codex` 这个仓库本身，`v1.3` 起默认保留 10 个 Skills：
 
 - `audit`
 - `deep-audit`
 - `catchup`
 - `handoff`
 - `spec`
+- `task`
 - `done`
+- `docs`
+- `release`
+- `diagnose`
 
-**当前不额外增加专门的 maintenance / release Skill**。原因不是这类 Skill 永远没价值，而是目前这类动作的频率还不高，直接用：
+这样做不是为了“技能越多越好”，而是为了把当前最常见的维护动作都收敛到明确入口：
 
-- `$deep-audit`
-- roadmap / spec / session-notes
-- `docs/release/README.md`
-- `docs/reports/release-note-template.md`
+- `$task` 负责小任务闭环
+- `$docs` 负责文档刷新与 starter 回写
+- `$release` 负责轻量版本整理
+- `$diagnose` 负责结构性摩擦和长期维护风险诊断
 
-这套组合已经足够，而且更透明。
+仍然保持的边界：
 
-如果未来出现下面任一情况，再考虑抽出专门 Skill：
-
-- 版本整理动作明显高频
-- 发布记录格式开始反复手工重复
-- 阶段收尾需要稳定复用一套固定报告
+- Hooks 继续是可选增强项，不进入 starter 默认层
+- `release` 继续遵守轻量发布纪律，不演化成复杂流水线
+- `diagnose` 在本仓库更偏工作流和文档契约诊断，而不是重型代码审计
 
 ---
 
-**版本**: v1.2（自举与维护版）
-**更新日期**: 2026-03-28
+**版本**: v1.3（工作流对齐版）
+**更新日期**: 2026-03-31

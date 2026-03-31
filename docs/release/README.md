@@ -27,7 +27,7 @@
   - 修正过时判断
   - 小幅一致性和可用性优化
 
-当前 `v1.2` 是完成自举并建立维护纪律后的新基线。
+当前 `v1.3` 是完成非 Hooks 默认流程对齐后的新基线。
 
 ## 每次发布前至少做什么
 
@@ -66,21 +66,25 @@
 
 - [docs/reports/release-note-template.md](../reports/release-note-template.md)
 
-## 为什么当前不单独增加 release Skill
+## 为什么当前增加 release Skill
 
-截至当前版本，本仓库**不默认增加专门的 maintenance/release Skill**。原因是：
+截至 `v1.3`，本仓库**默认增加 `release` Skill**。原因是：
 
-- 现有 `$deep-audit` 已覆盖阶段性审计入口
-- roadmap、spec、session-notes 已经提供状态同步层
-- release 记录更像一次显式整理动作，而不是高频命令
+- starter 契约、主入口和默认 Skill 体系已经明显变复杂
+- 版本整理不再只是偶发动作，而是会反复同步多个入口
+- 继续完全手工执行，容易造成 README、`00-04`、starter、changelog 和 reports 漂移
 
-当前更稳的组合是：
+但这里的 `release` 仍然是**轻量整理入口**，不是复杂流水线。它应该：
 
-1. 运行 `$deep-audit` 或常规一致性检查
-2. 更新 roadmap / spec / session-notes
-3. 按本页规则补最小发布记录
+1. 读取本页规则
+2. 同步版本字段、状态文档和最小发布记录
+3. 跑相关一致性检查
 
-如果未来发布节奏明显提高，再考虑单独抽出 release Skill。
+它不应该：
+
+- 取代人工判断发布级别
+- 取代审计或全量测试
+- 引入复杂 CI/CD 发布流程
 
 ## 不做的事情
 

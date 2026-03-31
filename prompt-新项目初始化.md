@@ -65,6 +65,7 @@ Lint/格式化命令:
 1. `AGENTS.md` 如何分层
    - 根 `AGENTS.md` 放什么
    - 哪些子目录需要单独 `AGENTS.md`
+   - 是否需要建议用户补 `~/.codex/AGENTS.md` 承载个人偏好
 2. `.codex/config.toml` 如何配置
    - `approval_policy`
    - `sandbox_mode`
@@ -79,12 +80,16 @@ Lint/格式化命令:
    - 是否需要写文件后格式化
    - 是否需要提交前检查
 5. Skills 如何落地
-   - 必须创建：`audit`、`deep-audit`、`catchup`、`handoff`、`spec`、`done`
+   - 必须创建：`audit`、`deep-audit`、`catchup`、`handoff`、`spec`、`task`、`done`、`docs`、`release`、`diagnose`
    - 是否需要项目专属 Skill
-6. 项目文档持久化
+   - 哪些流程必须放项目内 `.agents/skills/`，哪些只建议放个人 `~/.codex/skills/`
+6. 是否需要 `.codex/agents/`
+   - 是否需要 reviewer / docs-researcher 这类自定义 agents
+7. 项目文档持久化
    - 是否创建 `docs/roadmap/`
    - 是否创建 `docs/specs/`
    - 是否创建 `docs/architecture/`
+   - 是否创建 `docs/development/`
 
 额外要求：
 
@@ -106,10 +111,11 @@ Lint/格式化命令:
 2. 按需创建子目录 `AGENTS.md`
 3. `.codex/config.toml`
 4. `.codex/rules/default.rules`
-5. `.agents/skills/` 下的 6 个基础 Skills
-6. `docs/roadmap/README.md`
-7. 按需创建首个当前 Phase 文件
-8. 如项目复杂，补 `docs/specs/README.md` 与 `docs/architecture/README.md`
+5. `.agents/skills/` 下的 10 个默认 Skills
+6. `.codex/agents/` 下按需补 reviewer / docs-researcher
+7. `docs/roadmap/README.md`
+8. 按需创建首个当前 Phase 文件
+9. 如项目复杂，补 `docs/specs/README.md`、`docs/architecture/README.md` 与 `docs/development/README.md`
 
 要求：
 
@@ -132,6 +138,12 @@ Lint/格式化命令:
 5. 明确哪些地方因为项目尚未完善而无法验证
 6. 用一句话说明“下次进入这个项目时，用户应该怎么开始”
 7. 明确回答“这是从 starter 改出来的，还是完全按项目重新设计的”
+
+其中“规则自检”优先使用类似下面的命令明确汇报：
+
+```bash
+codex execpolicy check --rules .codex/rules/default.rules -- <代表性命令>
+```
 
 最终输出格式：
 

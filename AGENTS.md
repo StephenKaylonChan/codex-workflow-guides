@@ -8,13 +8,14 @@
 - `00-日常使用说明.md`：日常操作手册
 - `01-AGENTS配置架构指南.md`：AGENTS、config、rules、profiles
 - `02-自动化与命令策略.md`：Hooks、Rules、ExecPolicy、CI/CD
-- `03-Skills命令配置.md`：Skills 体系与模板
+- `03-Skills命令配置.md`：Skills 体系、默认 Skill 契约与模板
 - `04-工作流最佳实践.md`：工作流策略与高级模式
 - `prompt-*.md`：初始化、升级、迁移、维护的直接提示词
 - `templates/starter-project/`：可复制到真实项目的起步骨架
 - `research/`：带来源依据的对比研究
 - `.claude/`：历史 Claude 阶段遗留资料，只作参考，不再作为当前生效配置
 - `.codex/`、`.agents/`、`docs/`：本仓库当前实际使用的 Codex 协作系统
+- `docs/development/`：本仓库自身的开发与维护文档
 - `docs/release/README.md`：本仓库的轻量发布与版本维护纪律
 - `docs/reports/capability-watch-log.md`：官方能力变化与采用决策的持续记录
 

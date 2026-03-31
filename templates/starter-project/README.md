@@ -12,12 +12,14 @@
 
 - `AGENTS.md`
 - `.codex/config.toml`
+- `.codex/agents/`
 - `.codex/rules/default.rules`
-- `.agents/skills/` 下 6 个基础 Skills
+- `.agents/skills/` 下 10 个默认 Skills
 - `docs/roadmap/README.md`
 - `docs/roadmap/phase-1-foundation.md`
 - `docs/specs/README.md`
 - `docs/architecture/README.md`
+- `docs/development/README.md`
 - `.gitignore`
 
 ## 最快使用方式
@@ -25,8 +27,9 @@
 1. 把整个目录结构复制到目标项目根目录
 2. 先替换 `AGENTS.md` 里的项目描述、目录结构、真实命令、技术栈
 3. 再替换 `.codex/rules/default.rules` 里与项目无关的示例命令
-4. 检查 6 个基础 Skills，确认它们引用的是项目真实命令和真实文档路径
-5. 最后把 [prompt-新项目初始化](../../prompt-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96.md) 交给 Codex，让它按当前项目继续细化
+4. 检查 10 个默认 Skills，确认它们引用的是项目真实命令和真实文档路径
+5. 按需调整 `.codex/agents/` 下的 reviewer / docs-researcher 预设
+6. 最后把 [prompt-新项目初始化](../../prompt-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96.md) 交给 Codex，让它按当前项目继续细化
 
 ## 第一批必须替换的内容
 
@@ -48,6 +51,9 @@
 4. `docs/roadmap/README.md`
    - 当前阶段
    - 第一阶段的实际目标
+5. `docs/development/`
+   - 项目真实的维护文档结构
+   - 是否需要 `getting-started / maintenance / changelog`
 
 ## 初始化后最低验收
 
@@ -56,8 +62,9 @@
 1. `AGENTS.md` 里的命令可以在目标项目里真实执行
 2. Rules 里的 `allow / prompt / forbidden` 反映了真实命令边界
 3. 至少一个真实项目命令已经跑通过
-4. roadmap 已经能回答“当前项目下一步做什么”
-5. `catchup / handoff / spec / done` 至少已有最小可用入口
+4. 至少用 `codex execpolicy check --rules .codex/rules/default.rules -- <command>` 验证过一条代表性规则
+5. roadmap 已经能回答“当前项目下一步做什么”
+6. `catchup / handoff / spec / task / done / docs / release / diagnose` 至少已有最小可用入口
 
 ## 使用建议
 
@@ -65,6 +72,7 @@
 - 不要把示例命令原样留在项目里
 - 先复制，再让 Codex 探索并改写，会比从空白开始稳定
 - 如果目标项目本身是文档仓库、脚本仓库或工具仓库，不要照搬应用项目的命令假设
+- 如需跨多个项目复用个人 Skill 或命令批准，放到 `~/.codex/skills/` 与 `~/.codex/rules/`；团队默认流程仍放仓库内
 
 ## 仓库类型适配矩阵
 
@@ -92,6 +100,7 @@
 因此这里的默认策略是：
 
 - starter 默认提供稳定底座：`AGENTS.md`、Rules、Skills、roadmap/spec
+- 如项目需要更稳定的多代理协作，可从 starter 自带的 `.codex/agents/` 预设继续细化
 - Hooks 作为项目级增强项按需加入
 - 只有当项目已经明确需要确定性的前后置脚本、通知或校验时，再单独设计 Hooks
 

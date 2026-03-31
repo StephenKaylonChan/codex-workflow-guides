@@ -12,6 +12,10 @@ network_access = false
 persistence = "save-all"
 max_bytes = 5242880
 
+[agents]
+max_threads = 6
+max_depth = 1
+
 [tui]
 status_line = ["model", "context-remaining", "git-branch"]
 
@@ -21,9 +25,14 @@ model_reasoning_effort = "high"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
+[profiles.docs-maintenance]
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
 [profiles.lightweight]
 model = "gpt-5.4-mini"
 model_reasoning_effort = "low"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-

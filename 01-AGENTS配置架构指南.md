@@ -2,7 +2,7 @@
 
 > Codex CLI 的指令与配置系统 — 项目规范、多层配置、持久化记忆
 
-**版本**: v1.2（自举与维护版）
+**版本**: v1.3（工作流对齐版）
 **适用**: Codex CLI v0.115.0 附近（2026-03）
 **对标**: Claude Code guides v3.14《01-CLAUDE配置架构指南》
 
@@ -80,13 +80,22 @@
 | 构建/测试/启动命令 | `AGENTS.md` |
 | 技术栈版本声明 | `AGENTS.md` |
 | 个人开发偏好 | `~/.codex/AGENTS.md` |
+| 个人跨项目 Skills | `~/.codex/skills/` |
 | 模型选择、审批策略 | `config.toml` |
 | MCP 服务器配置 | `config.toml` |
 | 沙盒/网络策略 | `config.toml` |
 | 临时覆盖指令 | `AGENTS.override.md`（不提交 Git） |
 | 命令执行策略 | `.codex/rules/*.rules`（Starlark） |
+| 个人命令批准积累 | `~/.codex/rules/default.rules` |
 
 > **与 Claude Code 的关键区别**：Claude Code 的 Auto Memory 会自动记住你的纠正和偏好。Codex 没有这个能力 — 如果你纠正了 Codex 的某个行为，需要**手动写入 AGENTS.md** 才能跨会话保持。
+
+推荐把 Codex 配成“两层复用”：
+
+- 仓库层：`AGENTS.md`、`.codex/`、`.agents/`、`docs/`，放团队共享和可审计状态
+- 个人层：`~/.codex/AGENTS.md`、`~/.codex/skills/`、`~/.codex/rules/`、`notify`，放跨仓库个人习惯和机器相关配置
+
+团队流程不要依赖个人层才能工作；个人层应该是增强，而不是前置条件。
 
 ---
 
@@ -123,6 +132,9 @@ project-root/
 │
 ├── .codex/
 │   ├── config.toml                # 项目级配置（审批、沙盒、MCP）
+│   ├── agents/                    # 项目级自定义 subagents
+│   │   ├── reviewer.toml
+│   │   └── docs-researcher.toml
 │   └── rules/
 │       └── default.rules          # 命令执行策略（Starlark）
 │
@@ -143,7 +155,8 @@ project-root/
 │
 └── docs/
     ├── roadmap/                   # 项目路线图
-    └── specs/                     # 功能设计文档
+    ├── specs/                     # 功能设计文档
+    └── development/               # 开发与维护文档
 ```
 
 **注意**：Codex 的 Skills 目录是 `.agents/skills/`（不是 `.codex/skills/`）。
@@ -435,13 +448,13 @@ model_reasoning_effort = "medium"
 approval_policy = "on-request"
 
 [profiles.deep-review]
-model = "gpt-5-pro"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
-approval_policy = "never"
+approval_policy = "on-request"
 
 [profiles.lightweight]
-model = "gpt-4.1"
-approval_policy = "untrusted"
+model = "gpt-5.4-mini"
+approval_policy = "on-request"
 model_reasoning_effort = "low"
 ```
 
@@ -721,5 +734,5 @@ tool_timeout_sec = 60.0
 
 ---
 
-**版本**: v1.2（自举与维护版）
-**更新日期**: 2026-03-28
+**版本**: v1.3（工作流对齐版）
+**更新日期**: 2026-03-31
